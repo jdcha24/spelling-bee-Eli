@@ -116,81 +116,65 @@
             6: [] // Special case for Repaso group, handled in displayGroup
         };
 
-        // --- English Letter Pronunciations ---
-
-        // PLAN A: Spanish phonetics (ideal, works in Edge)
-        const spanishPhonetics = {
-            A: 'ei', B: 'bi', C: 'si', D: 'di', E: 'i', F: 'ef', G: 'yi',
-            H: 'eich', I: 'ai', J: 'yei', K: 'kei', L: 'el', M: 'em', N: 'en',
-            O: 'ou', P: 'pi', Q: 'kiu', R: 'ar', S: 'es', T: 'ti', U: 'iu',
-            V: 'vi', W: 'doble iu', X: 'ex', Y: 'uai', Z: 'zi'
+        // --- Standardized Audio URLs ---
+        // Using high-quality recordings from Google's static assets for 100% consistency.
+        const letterAudioUrls = {
+            A: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/A--_us_1.mp3',
+            B: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/B--_us_1.mp3',
+            C: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/C--_us_1.mp3',
+            D: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/D--_us_1.mp3',
+            E: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/E--_us_1.mp3',
+            F: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/F--_us_1.mp3',
+            G: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/G--_us_1.mp3',
+            H: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/H--_us_1.mp3',
+            I: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/I--_us_1.mp3',
+            J: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/J--_us_1.mp3',
+            K: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/K--_us_1.mp3',
+            L: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/L--_us_1.mp3',
+            M: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/M--_us_1.mp3',
+            N: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/N--_us_1.mp3',
+            O: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/O--_us_1.mp3',
+            P: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/P--_us_1.mp3',
+            Q: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/Q--_us_1.mp3',
+            R: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/R--_us_1.mp3',
+            S: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/S--_us_1.mp3',
+            T: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/T--_us_1.mp3',
+            U: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/U--_us_1.mp3',
+            V: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/V--_us_1.mp3',
+            W: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/W--_us_1.mp3',
+            X: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/X--_us_1.mp3',
+            Y: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/Y--_us_1.mp3',
+            Z: 'https://ssl.gstatic.com/dictionary/static/sounds/20200429/Z--_us_1.mp3'
         };
 
-        // PLAN B: English phonetics (fallback, for Chrome)
-        const englishPhonetics = {
-            A: 'ey', B: 'bee', C: 'see', D: 'dee', E: 'ee', F: 'eff', G: 'jee',
-            H: 'eysh', I: 'eye', J: 'jay', K: 'kay', L: 'ell', M: 'em', N: 'en',
-            O: 'oh', P: 'pee', Q: 'cue', R: 'are', S: 'ess', T: 'tee', U: 'you',
-            V: 'vee', W: 'double-u', X: 'ex', Y: 'why', Z: 'zee'
-        };
+        // Cache for audio objects to prevent re-downloading
+        const audioCache = {};
         
-        // --- Global variables for voice logic ---
-        let preferredLang = 'en-US'; // Default to English
-        let activePhonetics = englishPhonetics; // Default to English phonetics
-
 
         // --- CORE FUNCTIONS ---
         
         /**
-         * Finds an available Spanish voice and sets it as preferred.
-         * If not found, it confirms the English fallback.
-         */
-        function findSpanishVoice() {
-            // Get the list of voices available in the browser
-            let voices = speechSynthesis.getVoices();
-            if (voices.length > 0) {
-                // Find the first voice that is Spanish (es-MX, es-ES, es-US, etc.)
-                const spanishVoice = voices.find(voice => voice.lang.startsWith('es-'));
-                
-                if (spanishVoice) {
-                    // Plan A: Found it! Use Spanish voice and phonetics.
-                    console.log('¡Voz en español encontrada!', spanishVoice.name);
-                    preferredLang = spanishVoice.lang;
-                    activePhonetics = spanishPhonetics;
-                } else {
-                    // Plan B: No Spanish voice. Use English fallback.
-                    console.log('No se encontró voz en español, usando inglés como fallback.');
-                    preferredLang = 'en-US';
-                    activePhonetics = englishPhonetics;
-                }
-            }
-        }
-
-        /**
-         * Uses the browser's Speech Synthesis API to say a letter's name.
+         * Plays a standardized, high-quality audio file for the letter.
          * @param {string} letter The letter to speak (e.g., 'A').
          */
         function speakLetter(letter) {
             const upperLetter = letter.toUpperCase();
-            // Get pronunciation from the *active* list (Spanish or English)
-            const pronunciation = activePhonetics[upperLetter];
-            if (!pronunciation || !window.speechSynthesis) return;
+            const audioUrl = letterAudioUrls[upperLetter];
+            if (!audioUrl) return;
 
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(pronunciation);
-            
-            // Use the language we found (Spanish or English)
-            utterance.lang = preferredLang; 
-            utterance.pitch = 2.0;    // Max pitch
-            
-            // Adjust rate: Long words like 'W' must be faster
-            if (['W'].includes(upperLetter)) {
-                utterance.rate = 0.7; // Faster for 'double-u' or 'doble iu'
+            let audio;
+            // Check if we've played this sound before
+            if (audioCache[upperLetter]) {
+                audio = audioCache[upperLetter];
             } else {
-                utterance.rate = 0.3; // User's requested very slow rate
+                // First time playing: create, store in cache
+                audio = new Audio(audioUrl);
+                audioCache[upperLetter] = audio;
             }
             
-            window.speechSynthesis.speak(utterance);
+            audio.currentTime = 0; // Rewind
+            audio.playbackRate = 0.8; // Set speed to 80% (slower)
+            audio.play();
         }
 
         /**
@@ -343,14 +327,8 @@
             createGroupButtons();
             displayGroup(1); // Display the first group by default
             
-            // --- VOICE INITIALIZATION ---
-            // The list of voices loads asynchronously.
-            // We must wait for it to be ready.
-            findSpanishVoice(); // Try immediately
-            if (speechSynthesis.onvoiceschanged !== undefined) {
-                // And try again when the list is populated
-                speechSynthesis.onvoiceschanged = findSpanishVoice;
-            }
+            // --- VOICE INITIALIZATION (REMOVED) ---
+            // No longer need to detect voices, this is much simpler.
         });
 
     </script>
