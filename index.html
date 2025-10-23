@@ -11,12 +11,12 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     
     <!-- Tailwind CSS for rapid styling -->
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Google Fonts: Nunito for a friendly look -->
-    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
-    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
-    <link href="[https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap](https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap)" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 
     <style>
         /* Custom styles */
@@ -73,6 +73,7 @@
 
     <script>
         // --- DATA: Words, Groups, and Images ---
+        // *** NOTE: Fixed broken image URLs (removed markdown and 'httpss') ***
         const groupNames = {
             1: 'Grupo 1',
             2: 'Grupo 2',
@@ -84,64 +85,98 @@
 
         const wordsByGroup = {
             1: [
-                { word: 'zoo', image: '[https://placehold.co/400x300/a7f3d0/34d399?text=Zoo](https://placehold.co/400x300/a7f3d0/34d399?text=Zoo)' },
-                { word: 'yoyo', image: '[https://placehold.co/400x300/fecaca/f87171?text=Yoyo](https://placehold.co/400x300/fecaca/f87171?text=Yoyo)' },
-                { word: 'hen', image: '[https://placehold.co/400x300/fed7aa/fb923c?text=Hen](https://placehold.co/400x300/fed7aa/fb923c?text=Hen)' },
-                { word: 'five', image: '[https://placehold.co/400x300/bfdbfe/60a5fa?text=Five](https://placehold.co/400x300/bfdbfe/60a5fa?text=Five)' }
+                { word: 'zoo', image: 'https://placehold.co/400x300/a7f3d0/34d399?text=Zoo' },
+                { word: 'yoyo', image: 'https://placehold.co/400x300/fecaca/f87171?text=Yoyo' },
+                { word: 'hen', image: 'https://placehold.co/400x300/fed7aa/fb923c?text=Hen' },
+                { word: 'five', image: 'https://placehold.co/400x300/bfdbfe/60a5fa?text=Five' }
             ],
             2: [
-                { word: 'eight', image: '[https://placehold.co/400x300/c7d2fe/818cf8?text=Eight](https://placehold.co/400x300/c7d2fe/818cf8?text=Eight)' },
-                { word: 'hair', image: '[https://placehold.co/400x300/ddd6fe/a78bfa?text=Hair](https://placehold.co/400x300/ddd6fe/a78bfa?text=Hair)' },
-                { word: 'eyes', image: '[https://placehold.co/400x300/fbcfe8/f472b6?text=Eyes](https://placehold.co/400x300/fbcfe8/f472b6?text=Eyes)' },
-                { word: 'body', image: 'httpss://placehold.co/400x300/d9f99d/84cc16?text=Body' }
+                { word: 'eight', image: 'https://placehold.co/400x300/c7d2fe/818cf8?text=Eight' },
+                { word: 'hair', image: 'https://placehold.co/400x300/ddd6fe/a78bfa?text=Hair' },
+                { word: 'eyes', image: 'https://placehold.co/400x300/fbcfe8/f472b6?text=Eyes' },
+                { word: 'body', image: 'https://placehold.co/400x300/d9f99d/84cc16?text=Body' }
             ],
             3: [
-                { word: 'duck', image: '[https://placehold.co/400x300/fef08a/facc15?text=Duck](https://placehold.co/400x300/fef08a/facc15?text=Duck)' },
-                { word: 'purple', image: '[https://placehold.co/400x300/e9d5ff/c084fc?text=Purple](https://placehold.co/400x300/e9d5ff/c084fc?text=Purple)' },
-                { word: 'father', image: '[https://placehold.co/400x300/bbf7d0/4ade80?text=Father](https://placehold.co/400x300/bbf7d0/4ade80?text=Father)' },
-                { word: 'wing', image: '[https://placehold.co/400x300/a5f3fc/22d3ee?text=Wing](https://placehold.co/400x300/a5f3fc/22d3ee?text=Wing)' }
+                { word: 'duck', image: 'https://placehold.co/400x300/fef08a/facc15?text=Duck' },
+                { word: 'purple', image: 'https://placehold.co/400x300/e9d5ff/c084fc?text=Purple' },
+                { word: 'father', image: 'https://placehold.co/400x300/bbf7d0/4ade80?text=Father' },
+                { word: 'wing', image: 'https://placehold.co/400x300/a5f3fc/22d3ee?text=Wing' }
             ],
             4: [
-                { word: 'violin', image: '[https://placehold.co/400x300/fecdd3/fb7185?text=Violin](https://placehold.co/400x300/fecdd3/fb7185?text=Violin)' },
-                { word: 'square', image: 'httpss://placehold.co/400x300/bae6fd/38bdf8?text=Square' },
-                { word: 'rabbit', image: '[https://placehold.co/400x300/e5e7eb/6b7280?text=Rabbit](https://placehold.co/400x300/e5e7eb/6b7280?text=Rabbit)' },
-                { word: 'weather', image: '[https://placehold.co/400x300/a5f3fc/22d3ee?text=Weather](https://placehold.co/400x300/a5f3fc/22d3ee?text=Weather)' }
+                { word: 'violin', image: 'https://placehold.co/400x300/fecdd3/fb7185?text=Violin' },
+                { word: 'square', image: 'https://placehold.co/400x300/bae6fd/38bdf8?text=Square' },
+                { word: 'rabbit', image: 'https://placehold.co/400x300/e5e7eb/6b7280?text=Rabbit' },
+                { word: 'weather', image: 'https://placehold.co/400x300/a5f3fc/22d3ee?text=Weather' }
             ],
             5: [
-                { word: 'vegetables', image: '[https://placehold.co/400x300/dcfce7/4ade80?text=Vegetables](https://placehold.co/400x300/dcfce7/4ade80?text=Vegetables)' },
-                { word: 'animals', image: 'httpss://placehold.co/400x300/fee2e2/f87171?text=Animals' },
-                { word: 'watermelon', image: '[https://placehold.co/400x300/fecaca/ef4444?text=Watermelon](https://placehold.co/400x300/fecaca/ef4444?text=Watermelon)' },
-                { word: 'healthy', image: '[https://placehold.co/400x300/bbf7d0/22c55e?text=Healthy](https://placehold.co/400x300/bbf7d0/22c55e?text=Healthy)' }
+                { word: 'vegetables', image: 'https://placehold.co/400x300/dcfce7/4ade80?text=Vegetables' },
+                { word: 'animals', image: 'https://placehold.co/400x300/fee2e2/f87171?text=Animals' },
+                { word: 'watermelon', image: 'https://placehold.co/400x300/fecaca/ef4444?text=Watermelon' },
+                { word: 'healthy', image: 'https://placehold.co/400x300/bbf7d0/22c55e?text=Healthy' }
             ],
             6: [] // Special case for Repaso group, handled in displayGroup
         };
 
-        // --- English Letter Pronunciations (Stable) ---
-        const letterPronunciations = {
-            A: 'ey', B: 'bee', C: 'see', D: 'dee', E: 'ee', F: 'eff', G: 'jee',
-            H: 'eysh', I: 'eye', J: 'jay', K: 'kay', L: 'ell', M: 'em', N: 'en',
-            O: 'oh', P: 'pee', Q: 'cue', R: 'are', S: 'ess', T: 'tee', U: 'you',
-            V: 'vee', W: 'double-u', X: 'ex', Y: 'why', Z: 'zee'
+        // --- Standardized Audio URLs (NEW SOURCE: Wikimedia Commons) ---
+        // Using high-quality, public domain .ogg files.
+        const letterAudioUrls = {
+            A: 'https://upload.wikimedia.org/wikipedia/commons/c/c4/En-us-a.ogg',
+            B: 'https://upload.wikimedia.org/wikipedia/commons/d/d0/En-us-b.ogg',
+            C: 'https://upload.wikimedia.org/wikipedia/commons/5/52/En-us-c.ogg',
+            D: 'https://upload.wikimedia.org/wikipedia/commons/8/82/En-us-d.ogg',
+            E: 'https://upload.wikimedia.org/wikipedia/commons/6/62/En-us-e.ogg',
+            F: 'https://upload.wikimedia.org/wikipedia/commons/7/7d/En-us-f.ogg',
+            G: 'https://upload.wikimedia.org/wikipedia/commons/b/ba/En-us-g.ogg',
+            H: 'https://upload.wikimedia.org/wikipedia/commons/8/80/En-us-h.ogg',
+            I: 'https://upload.wikimedia.org/wikipedia/commons/e/e4/En-us-i.ogg',
+            J: 'https://upload.wikimedia.org/wikipedia/commons/3/3a/En-us-j.ogg',
+            K: 'https://upload.wikimedia.org/wikipedia/commons/7/7a/En-us-k.ogg',
+            L: 'https://upload.wikimedia.org/wikipedia/commons/d/dc/En-us-l.ogg',
+            M: 'https://upload.wikimedia.org/wikipedia/commons/a/aa/En-us-m.ogg',
+            N: 'https://upload.wikimedia.org/wikipedia/commons/1/13/En-us-n.ogg',
+            O: 'https://upload.wikimedia.org/wikipedia/commons/8/87/En-us-o.ogg',
+            P: 'https://upload.wikimedia.org/wikipedia/commons/e/e8/En-us-p.ogg',
+            Q: 'https://upload.wikimedia.org/wikipedia/commons/c/ce/En-us-q.ogg',
+            R: 'https://upload.wikimedia.org/wikipedia/commons/e/e1/En-us-r.ogg',
+S: 'https://upload.wikimedia.org/wikipedia/commons/d/d7/En-us-s.ogg',
+            T: 'https://upload.wikimedia.org/wikipedia/commons/b/b1/En-us-t.ogg',
+            U: 'https://upload.wikimedia.org/wikipedia/commons/1/17/En-us-u.ogg',
+            V: 'https://upload.wikimedia.org/wikipedia/commons/8/8f/En-us-v.ogg',
+            W: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/En-us-w.ogg',
+            X: 'https://upload.wikimedia.org/wikipedia/commons/8/82/En-us-x.ogg',
+            Y: 'https://upload.wikimedia.org/wikipedia/commons/e/e3/En-us-y.ogg',
+            Z: 'https://upload.wikimedia.org/wikipedia/commons/7/71/En-us-z.ogg'
         };
 
+        // Cache for audio objects to prevent re-downloading
+        const audioCache = {};
+        
 
         // --- CORE FUNCTIONS ---
-
+        
         /**
-         * Uses the browser's Speech Synthesis API to say a letter's name.
+         * Plays a standardized, high-quality audio file for the letter.
          * @param {string} letter The letter to speak (e.g., 'A').
          */
         function speakLetter(letter) {
             const upperLetter = letter.toUpperCase();
-            const pronunciation = letterPronunciations[upperLetter];
-            if (!pronunciation || !window.speechSynthesis) return;
+            const audioUrl = letterAudioUrls[upperLetter];
+            if (!audioUrl) return;
 
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(pronunciation);
-            utterance.lang = 'en-US'; 
-            utterance.rate = 0.75; 
-            utterance.pitch = 1.2;
-            window.speechSynthesis.speak(utterance);
+            let audio;
+            // Check if we've played this sound before
+            if (audioCache[upperLetter]) {
+                audio = audioCache[upperLetter];
+            } else {
+                // First time playing: create, store in cache
+                audio = new Audio(audioUrl);
+                audioCache[upperLetter] = audio;
+            }
+            
+            audio.currentTime = 0; // Rewind
+            audio.playbackRate = 0.8; // Set speed to 80% (slower)
+            // Added error catching for playback issues
+            audio.play().catch(e => console.error("Error al reproducir audio:", e));
         }
 
         /**
@@ -154,7 +189,6 @@
 
             // --- SPECIAL CASE FOR GROUP 6: REPASO ---
             if (groupNumber == 6) {
-                // *** UPDATED: Added 'Y', 'V', 'B', 'W', 'J' ***
                 const reviewLetters = ['H', 'G', 'R', 'D', 'L', 'M', 'N', 'Y', 'V', 'B', 'W', 'J'];
                 
                 // Create one single card for the review
@@ -216,10 +250,7 @@
                 img.src = wordData.image;
                 img.alt = `Ilustración de ${wordData.word}`;
                 img.className = 'w-full h-48 object-cover rounded-xl mb-4';
-                // Corrected the typo in watermelon URL from 'httpss'
-                if (img.src.includes('httpss:')) {
-                    img.src = img.src.replace('httpss:', 'https:');
-                }
+                
                 img.onerror = () => { img.src = `https://placehold.co/400x300/e0e0e0/9090e0?text=Error`; }
 
                 const lettersContainer = document.createElement('div');
