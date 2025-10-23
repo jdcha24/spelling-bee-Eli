@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spelling Bee Learner</title>
+
+    <!-- 
+      *** INICIO DE LA SOLUCIÓN DE CACHÉ ***
+      Estas etiquetas le dicen al navegador que no guarde 
+      una copia en caché y que siempre pida la versión más nueva.
+    -->
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <!-- *** FIN DE LA SOLUCIÓN DE CACHÉ *** -->
     
     <!-- Tailwind CSS for rapid styling -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -211,7 +221,7 @@
                 img.src = wordData.image;
                 img.alt = `Ilustración de ${wordData.word}`;
                 img.className = 'w-full h-48 object-cover rounded-xl mb-4';
-                img.onerror = () => { img.src = `https://placehold.co/400x300/e0e0e0/909090?text=Error`; }
+                img.onerror = () => { img.src = `https://placehold.co/400x300/e0e0e0/9090e0?text=Error`; }
 
                 const lettersContainer = document.createElement('div');
                 lettersContainer.className = 'flex justify-center gap-2 sm:gap-3 flex-wrap';
