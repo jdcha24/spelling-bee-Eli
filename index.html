@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spelling Bee Learner</title>
     
-    <!-- Tailwind CSS for rapid styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts: Nunito for a friendly look -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
@@ -48,21 +46,16 @@
 
     <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-5xl">
         
-        <!-- Header -->
         <header class="text-center mb-8">
             <h1 class="text-4xl sm:text-5xl font-black text-blue-800">Spelling Bee Learner</h1>
             <p class="text-lg text-blue-600 mt-2">¡Presiona cada letra para aprender a deletrear!</p>
         </header>
 
-        <!-- Group Selector -->
         <nav id="group-selector" class="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8">
-            <!-- Group buttons will be inserted here by JavaScript -->
-        </nav>
+            </nav>
 
-        <!-- Main content area for word cards -->
         <main id="word-container" class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-            <!-- Word cards will be inserted here by JavaScript -->
-        </main>
+            </main>
 
     </div>
 
@@ -98,232 +91,29 @@
                 { word: 'animals', image: 'https://placehold.co/400x300/fee2e2/f87171?text=Animals' },
                 { word: 'watermelon', image: 'https://placehold.co/400x300/fecaca/ef4444?text=Watermelon' },
                 { word: 'healthy', image: 'https://placehold.co/400x300/bbf7d0/22c55e?text=Healthy' }
+            ],
+            // --- GRUPO DE REPASO (ORDENADO ALFABÉTICAMENTE) ---
+            'Repaso': [
+                { word: 'B', image: 'https://placehold.co/400x300/a7f3d0/34d399?text=B' },
+                { word: 'C', image: 'https://placehold.co/400x300/ddd6fe/a78bfa?text=C' },
+                { word: 'D', image: 'https://placehold.co/400x300/bfdbfe/60a5fa?text=D' },
+                { word: 'G', image: 'https://placehold.co/400x300/fed7aa/fb923c?text=G' },
+                { word: 'H', image: 'https://placehold.co/400x300/fecaca/f87171?text=H' },
+                { word: 'L', image: 'https://placehold.co/400x300/fbcfe8/f472b6?text=L' },
+                { word: 'M', image: 'https://placehold.co/400x300/fbcfe8/f472b6?text=M' },
+                { word: 'N', image: 'https://placehold.co/400x300/fbcfe8/f472b6?text=N' },
+                { word: 'R', image: 'https://placehold.co/400x300/fef08a/facc15?text=R' },
+                { word: 'S', image: 'https://placehold.co/400x300/c7d2fe/818cf8?text=S' },
             ]
         };
 
         // --- English Letter Pronunciations (IMPROVED DICTION) ---
         // This mapping uses English phonetic spellings that the Speech API interprets correctly.
+        // --- ¡¡¡NO TOCAR!!! ---
         const letterPronunciations = {
-            A: 'eigh', B: 'bee', C: 'see', D: 'dee', E: 'ee', F: 'eff', G: 'jee',
-            H: 'aitch', I: 'eye', J: 'jay', K: 'kay', L: 'ell', M: 'em', N: 'en',
-            O: 'oh', P: 'pee', Q: 'cue', R: 'are', S: 'ess', T: 'tee', U: 'you', // <-- CORRECTED 'R'
-            V: 'vee', W: 'double-u', X: 'ex', Y: 'why', Z: 'zee'
-        };
-
-
-        // --- CORE FUNCTIONS ---
-
-        /**
-         * Uses the browser's Speech Synthesis API to say a letter's name.
-         * @param {string} letter The letter to speak (e.g., 'A').
-         */
-        function speakLetter(letter) {
-            const upperLetter = letter.toUpperCase();
-            const pronunciation = letterPronunciations[upperLetter];
-            if (!pronunciation || !window.speechSynthesis) return;
-
-            // Stop any currently speaking utterance to avoid overlap
-            window.speechSynthesis.cancel();
-
-            const utterance = new SpeechSynthesisUtterance(pronunciation);
-            utterance.lang = 'en-US'; // Set language to English
-            utterance.rate = 0.55; // Slower rate for clarity
-            utterance.pitch = 1.2; // A slightly higher, friendly pitch
-            
-            window.speechSynthesis.speak(utterance);
-        }
-
-        /**
-         * Creates and displays the word cards for a specific group.
-         * @param {number} groupNumber The group number to display.
-         */
-        function displayGroup(groupNumber) {
-            const wordContainer = document.getElementById('word-container');
-            const words = wordsByGroup[groupNumber];
-
-            // Clear previous words
-            wordContainer.innerHTML = '';
-
-            if (!words) {
-                wordContainer.innerHTML = '<p>Grupo no encontrado.</p>';
-                return;
-            }
-
-            // Create a card for each word in the group
-            words.forEach(wordData => {
-                // 1. Create the main card container
-                const card = document.createElement('div');
-                card.className = 'bg-white rounded-2xl shadow-lg p-4 sm:p-6 text-center transform transition-transform duration-300 hover:scale-105';
-
-                // 2. Create the image element
-                const img = document.createElement('img');
-                img.src = wordData.image;
-                img.alt = `Ilustración de ${wordData.word}`;
-                img.className = 'w-full h-48 object-cover rounded-xl mb-4';
-                // Fallback in case image fails to load
-                img.onerror = () => { img.src = `https://placehold.co/400x300/e0e0e0/909090?text=Error`; }
-
-                // 3. Create the container for the letters
-                const lettersContainer = document.createElement('div');
-                lettersContainer.className = 'flex justify-center gap-2 sm:gap-3 flex-wrap';
-
-                // 4. Create a button for each letter
-                wordData.word.split('').forEach(letter => {
-                    const letterButton = document.createElement('div');
-                    // Increased height and added flex-col for stacking
-                    letterButton.className = 'letter-button w-12 h-16 sm:w-14 sm:h-20 flex flex-col items-center justify-center bg-blue-100 text-blue-800 rounded-lg cursor-pointer transition-all duration-200 hover:bg-blue-200 hover:shadow-md p-1';
-                    
-                    // Set innerHTML to include both cases
-                    letterButton.innerHTML = `
-                        <span class="font-black text-2xl sm:text-3xl leading-none">${letter.toUpperCase()}</span>
-                        <span class="font-bold text-xl sm:text-2xl leading-none text-blue-600">${letter.toLowerCase()}</span>
-                    `;
-                    
-                    letterButton.addEventListener('click', () => {
-                        speakLetter(letter);
-                        // Add a visual "pop" effect on click
-                        letterButton.classList.add('letter-pop');
-                        letterButton.addEventListener('animationend', () => {
-                            letterButton.classList.remove('letter-pop');
-                        }, { once: true });
-                    });
-                    
-                    lettersContainer.appendChild(letterButton);
-                });
-
-                // 5. Assemble the card
-                card.appendChild(img);
-                card.appendChild(lettersContainer);
-                wordContainer.appendChild(card);
-            });
-            
-            // Update active state on group buttons
-            updateActiveGroupButton(groupNumber);
-        }
-
-        /**
-         * Updates the visual style of the active group button.
-         * @param {number} activeGroupNumber The currently selected group.
-         */
-        function updateActiveGroupButton(activeGroupNumber) {
-            const allButtons = document.querySelectorAll('.group-button');
-            allButtons.forEach(button => {
-                if (button.dataset.group == activeGroupNumber) {
-                    button.classList.add('active');
-                } else {
-                    button.classList.remove('active');
-                }
-            });
-        }
-        
-        /**
-         * Creates the group selector buttons.
-         */
-        function createGroupButtons() {
-            const selectorContainer = document.getElementById('group-selector');
-            const groupKeys = Object.keys(wordsByGroup);
-
-            groupKeys.forEach(key => {
-                const button = document.createElement('button');
-                button.className = 'group-button px-5 py-3 sm:px-6 sm:py-3 bg-white text-blue-700 font-bold rounded-full shadow-md transition-all duration-300 hover:bg-yellow-200';
-                button.textContent = `Grupo ${key}`;
-                button.dataset.group = key;
-                
-                button.addEventListener('click', () => {
-                    displayGroup(key);
-                });
-                
-                selectorContainer.appendChild(button);
-            });
-        }
-
-
-        // --- INITIALIZATION ---
-        // This runs when the page is fully loaded.
-        document.addEventListener('DOMContentLoaded', () => {
-            createGroupButtons();
-            // Display the first group by default
-            displayGroup(1);
-        });
-
-    </script>
-</body>
-</html>
-
-
-        /* Custom active state for group buttons */
-        .group-button.active {
-            background-color: #fbbf24; /* Amber-400 */
-            color: #1e3a8a; /* Blue-900 */
-            transform: scale(1.05);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        }
-
-    </style>
-</head>
-<body class="text-slate-800">
-
-    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-5xl">
-        
-        <!-- Header -->
-        <header class="text-center mb-8">
-            <h1 class="text-4xl sm:text-5xl font-black text-blue-800">Spelling Bee Learner</h1>
-            <p class="text-lg text-blue-600 mt-2">¡Presiona cada letra para aprender a deletrear!</p>
-        </header>
-
-        <!-- Group Selector -->
-        <nav id="group-selector" class="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8">
-            <!-- Group buttons will be inserted here by JavaScript -->
-        </nav>
-
-        <!-- Main content area for word cards -->
-        <main id="word-container" class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-            <!-- Word cards will be inserted here by JavaScript -->
-        </main>
-
-    </div>
-
-    <script>
-        // --- DATA: Words, Groups, and Images ---
-        const wordsByGroup = {
-            1: [
-                { word: 'zoo', image: 'https://placehold.co/400x300/a7f3d0/34d399?text=Zoo' },
-                { word: 'yoyo', image: 'https://placehold.co/400x300/fecaca/f87171?text=Yoyo' },
-                { word: 'hen', image: 'https://placehold.co/400x300/fed7aa/fb923c?text=Hen' },
-                { word: 'five', image: 'https://placehold.co/400x300/bfdbfe/60a5fa?text=Five' }
-            ],
-            2: [
-                { word: 'eight', image: 'https://placehold.co/400x300/c7d2fe/818cf8?text=Eight' }, // Corrected spelling
-                { word: 'hair', image: 'https://placehold.co/400x300/ddd6fe/a78bfa?text=Hair' },
-                { word: 'eyes', image: 'https://placehold.co/400x300/fbcfe8/f472b6?text=Eyes' },
-                { word: 'body', image: 'https://placehold.co/400x300/d9f99d/84cc16?text=Body' }
-            ],
-            3: [
-                { word: 'duck', image: 'https://placehold.co/400x300/fef08a/facc15?text=Duck' },
-                { word: 'purple', image: 'https://placehold.co/400x300/e9d5ff/c084fc?text=Purple' },
-                { word: 'father', image: 'https://placehold.co/400x300/bbf7d0/4ade80?text=Father' },
-                { word: 'wing', image: 'https://placehold.co/400x300/a5f3fc/22d3ee?text=Wing' }
-            ],
-            4: [
-                { word: 'violin', image: 'https://placehold.co/400x300/fecdd3/fb7185?text=Violin' },
-                { word: 'square', image: 'https://placehold.co/400x300/bae6fd/38bdf8?text=Square' },
-                { word: 'rabbit', image: 'https://placehold.co/400x300/e5e7eb/6b7280?text=Rabbit' },
-                { word: 'weather', image: 'https://placehold.co/400x300/a5f3fc/22d3ee?text=Weather' }
-            ],
-            5: [
-                { word: 'vegetables', image: 'https://placehold.co/400x300/dcfce7/4ade80?text=Vegetables' },
-                { word: 'animals', image: 'https://placehold.co/400x300/fee2e2/f87171?text=Animals' },
-                { word: 'watermelon', image: 'https://placehold.co/400x300/fecaca/ef4444?text=Watermelon' },
-                { word: 'healthy', image: 'https://placehold.co/400x300/bbf7d0/22c55e?text=Healthy' }
-            ]
-        };
-
-        // --- English Letter Pronunciations (IMPROVED DICTION) ---
-        // This mapping uses English phonetic spellings that the Speech API interprets correctly.
-        const letterPronunciations = {
-            A: 'eigh', B: 'bee', C: 'see', D: 'dee', E: 'ee', F: 'eff', G: 'jee', // <-- CORRECTED 'A'
-            H: 'aitch', I: 'eye', J: 'jay', K: 'kay', L: 'ell', M: 'em', N: 'en',
-            O: 'oh', P: 'pee', Q: 'cue', R: 'ar', S: 'ess', T: 'tee', U: 'you',
+            A: 'eh-e', B: 'bee', C: 'see', D: 'dee', E: 'ee', F: 'eff', G: 'jee',
+            H: 'eh-eesh', I: 'eye', J: 'jay', K: 'ke-e', L: 'ell', M: 'em', N: 'en',
+            O: 'oh', P: 'pee', Q: 'cue', R: 'are', S: 'ess', T: 'tee', U: 'you',
             V: 'vee', W: 'double-u', X: 'ex', Y: 'why', Z: 'zee'
         };
 
@@ -352,7 +142,7 @@
 
         /**
          * Creates and displays the word cards for a specific group.
-         * @param {number} groupNumber The group number to display.
+         * @param {number | string} groupNumber The group number or key to display.
          */
         function displayGroup(groupNumber) {
             const wordContainer = document.getElementById('word-container');
@@ -366,31 +156,21 @@
                 return;
             }
 
-            // Create a card for each word in the group
-            words.forEach(wordData => {
-                // 1. Create the main card container
-                const card = document.createElement('div');
-                card.className = 'bg-white rounded-2xl shadow-lg p-4 sm:p-6 text-center transform transition-transform duration-300 hover:scale-105';
+            // --- LÓGICA GRUPO REPASO ---
+            // Revisa si es el grupo especial "Repaso"
+            if (groupNumber === 'Repaso') {
+                // --- REPASO GROUP (Special Layout: Buttons only) ---
+                const reviewContainer = document.createElement('div');
+                // Un solo contenedor, centrado, con flex-wrap y que ocupe las 2 columnas del grid
+                reviewContainer.className = 'bg-white rounded-2xl shadow-lg p-4 sm:p-6 text-center flex flex-wrap justify-center gap-2 sm:gap-3 md:col-span-2';
 
-                // 2. Create the image element
-                const img = document.createElement('img');
-                img.src = wordData.image;
-                img.alt = `Ilustración de ${wordData.word}`;
-                img.className = 'w-full h-48 object-cover rounded-xl mb-4';
-                // Fallback in case image fails to load
-                img.onerror = () => { img.src = `https://placehold.co/400x300/e0e0e0/909090?text=Error`; }
-
-                // 3. Create the container for the letters
-                const lettersContainer = document.createElement('div');
-                lettersContainer.className = 'flex justify-center gap-2 sm:gap-3 flex-wrap';
-
-                // 4. Create a button for each letter
-                wordData.word.split('').forEach(letter => {
+                words.forEach(wordData => {
+                    const letter = wordData.word; // 'H', 'G', etc.
+                    
                     const letterButton = document.createElement('div');
-                    // Increased height and added flex-col for stacking
+                    // Usa exactamente el mismo estilo de botón que antes
                     letterButton.className = 'letter-button w-12 h-16 sm:w-14 sm:h-20 flex flex-col items-center justify-center bg-blue-100 text-blue-800 rounded-lg cursor-pointer transition-all duration-200 hover:bg-blue-200 hover:shadow-md p-1';
                     
-                    // Set innerHTML to include both cases
                     letterButton.innerHTML = `
                         <span class="font-black text-2xl sm:text-3xl leading-none">${letter.toUpperCase()}</span>
                         <span class="font-bold text-xl sm:text-2xl leading-none text-blue-600">${letter.toLowerCase()}</span>
@@ -398,21 +178,64 @@
                     
                     letterButton.addEventListener('click', () => {
                         speakLetter(letter);
-                        // Add a visual "pop" effect on click
                         letterButton.classList.add('letter-pop');
                         letterButton.addEventListener('animationend', () => {
                             letterButton.classList.remove('letter-pop');
                         }, { once: true });
                     });
                     
-                    lettersContainer.appendChild(letterButton);
+                    reviewContainer.appendChild(letterButton);
                 });
 
-                // 5. Assemble the card
-                card.appendChild(img);
-                card.appendChild(lettersContainer);
-                wordContainer.appendChild(card);
-            });
+                wordContainer.appendChild(reviewContainer);
+
+            } else {
+                // --- STANDARD GROUPS (Card Layout) ---
+                // Este es el código original que ya tenías
+                words.forEach(wordData => {
+                    // 1. Create the main card container
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-2xl shadow-lg p-4 sm:p-6 text-center transform transition-transform duration-300 hover:scale-105';
+
+                    // 2. Create the image element
+                    const img = document.createElement('img');
+                    img.src = wordData.image;
+                    img.alt = `Ilustración de ${wordData.word}`;
+                    img.className = 'w-full h-48 object-cover rounded-xl mb-4';
+                    img.onerror = () => { img.src = `https://placehold.co/400x300/e0e0e0/909090?text=Error`; }
+
+                    // 3. Create the container for the letters
+                    const lettersContainer = document.createElement('div');
+                    lettersContainer.className = 'flex justify-center gap-2 sm:gap-3 flex-wrap';
+
+                    // 4. Create a button for each letter
+                    wordData.word.split('').forEach(letter => {
+                        const letterButton = document.createElement('div');
+                        letterButton.className = 'letter-button w-12 h-16 sm:w-14 sm:h-20 flex flex-col items-center justify-center bg-blue-100 text-blue-800 rounded-lg cursor-pointer transition-all duration-200 hover:bg-blue-200 hover:shadow-md p-1';
+                        
+                        letterButton.innerHTML = `
+                            <span class="font-black text-2xl sm:text-3xl leading-none">${letter.toUpperCase()}</span>
+                            <span class="font-bold text-xl sm:text-2xl leading-none text-blue-600">${letter.toLowerCase()}</span>
+                        `;
+                        
+                        letterButton.addEventListener('click', () => {
+                            speakLetter(letter);
+                            letterButton.classList.add('letter-pop');
+                            letterButton.addEventListener('animationend', () => {
+                                letterButton.classList.remove('letter-pop');
+                            }, { once: true });
+                        });
+                        
+                        lettersContainer.appendChild(letterButton);
+                    });
+
+                    // 5. Assemble the card
+                    card.appendChild(img);
+                    card.appendChild(lettersContainer);
+                    wordContainer.appendChild(card);
+                });
+            }
+            // --- FIN DE LA LÓGICA ---
             
             // Update active state on group buttons
             updateActiveGroupButton(groupNumber);
@@ -420,7 +243,7 @@
 
         /**
          * Updates the visual style of the active group button.
-         * @param {number} activeGroupNumber The currently selected group.
+         * @param {number | string} activeGroupNumber The currently selected group.
          */
         function updateActiveGroupButton(activeGroupNumber) {
             const allButtons = document.querySelectorAll('.group-button');
@@ -443,7 +266,10 @@
             groupKeys.forEach(key => {
                 const button = document.createElement('button');
                 button.className = 'group-button px-5 py-3 sm:px-6 sm:py-3 bg-white text-blue-700 font-bold rounded-full shadow-md transition-all duration-300 hover:bg-yellow-200';
-                button.textContent = `Grupo ${key}`;
+                
+                // Si la "key" es un número, muestra "Grupo 1". Si es texto, muestra el texto (ej: "Repaso").
+                button.textContent = isNaN(key) ? key : `Grupo ${key}`;
+                
                 button.dataset.group = key;
                 
                 button.addEventListener('click', () => {
