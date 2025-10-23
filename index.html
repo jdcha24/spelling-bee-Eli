@@ -16,7 +16,7 @@
     <!-- Google Fonts: Nunito for a friendly look -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display.swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 
     <style>
         /* Custom styles */
@@ -116,17 +116,55 @@
             6: [] // Special case for Repaso group, handled in displayGroup
         };
 
-        // --- English Letter Pronunciations (USING SPANISH PHONETICS) ---
-        // This list uses Spanish spelling to create the English letter sound.
-        const letterPronunciations = {
-            A: 'ei', B: 'bi', C: 'si', D: 'di', E: 'i', F: 'eff', G: 'yi',
+        // --- English Letter Pronunciations ---
+
+        // PLAN A: Spanish phonetics (ideal, works in Edge)
+        const spanishPhonetics = {
+            A: 'ei', B: 'bi', C: 'si', D: 'di', E: 'i', F: 'ef', G: 'yi',
             H: 'eich', I: 'ai', J: 'yei', K: 'kei', L: 'el', M: 'em', N: 'en',
             O: 'ou', P: 'pi', Q: 'kiu', R: 'ar', S: 'es', T: 'ti', U: 'iu',
             V: 'vi', W: 'doble iu', X: 'ex', Y: 'uai', Z: 'zi'
         };
 
+        // PLAN B: English phonetics (fallback, for Chrome)
+        const englishPhonetics = {
+            A: 'ey', B: 'bee', C: 'see', D: 'dee', E: 'ee', F: 'eff', G: 'jee',
+            H: 'eysh', I: 'eye', J: 'jay', K: 'kay', L: 'ell', M: 'em', N: 'en',
+            O: 'oh', P: 'pee', Q: 'cue', R: 'are', S: 'ess', T: 'tee', U: 'you',
+            V: 'vee', W: 'double-u', X: 'ex', Y: 'why', Z: 'zee'
+        };
+        
+        // --- Global variables for voice logic ---
+        let preferredLang = 'en-US'; // Default to English
+        let activePhonetics = englishPhonetics; // Default to English phonetics
+
 
         // --- CORE FUNCTIONS ---
+        
+        /**
+         * Finds an available Spanish voice and sets it as preferred.
+         * If not found, it confirms the English fallback.
+         */
+        function findSpanishVoice() {
+            // Get the list of voices available in the browser
+            let voices = speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                // Find the first voice that is Spanish (es-MX, es-ES, es-US, etc.)
+                const spanishVoice = voices.find(voice => voice.lang.startsWith('es-'));
+                
+                if (spanishVoice) {
+                    // Plan A: Found it! Use Spanish voice and phonetics.
+                    console.log('¡Voz en español encontrada!', spanishVoice.name);
+                    preferredLang = spanishVoice.lang;
+                    activePhonetics = spanishPhonetics;
+                } else {
+                    // Plan B: No Spanish voice. Use English fallback.
+                    console.log('No se encontró voz en español, usando inglés como fallback.');
+                    preferredLang = 'en-US';
+                    activePhonetics = englishPhonetics;
+                }
+            }
+        }
 
         /**
          * Uses the browser's Speech Synthesis API to say a letter's name.
@@ -134,16 +172,23 @@
          */
         function speakLetter(letter) {
             const upperLetter = letter.toUpperCase();
-            const pronunciation = letterPronunciations[upperLetter];
+            // Get pronunciation from the *active* list (Spanish or English)
+            const pronunciation = activePhonetics[upperLetter];
             if (!pronunciation || !window.speechSynthesis) return;
 
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(pronunciation);
             
-            // *** UPDATED AS REQUESTED ***
-            utterance.lang = 'es-US'; // Use Spanish (Mexico) voice
-            utterance.rate = 0.6;     // Very slow speed
-            utterance.pitch = 2.0;    // Max pitch (capping 5.0 at max valid 2.0)
+            // Use the language we found (Spanish or English)
+            utterance.lang = preferredLang; 
+            utterance.pitch = 2.0;    // Max pitch
+            
+            // Adjust rate: Long words like 'W' must be faster
+            if (['W'].includes(upperLetter)) {
+                utterance.rate = 0.7; // Faster for 'double-u' or 'doble iu'
+            } else {
+                utterance.rate = 0.3; // User's requested very slow rate
+            }
             
             window.speechSynthesis.speak(utterance);
         }
@@ -297,6 +342,15 @@
         document.addEventListener('DOMContentLoaded', () => {
             createGroupButtons();
             displayGroup(1); // Display the first group by default
+            
+            // --- VOICE INITIALIZATION ---
+            // The list of voices loads asynchronously.
+            // We must wait for it to be ready.
+            findSpanishVoice(); // Try immediately
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                // And try again when the list is populated
+                speechSynthesis.onvoiceschanged = findSpanishVoice;
+            }
         });
 
     </script>
