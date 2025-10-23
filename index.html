@@ -106,7 +106,7 @@ A: 'eigh', B: 'bee', C: 'see', D: 'dee', E: 'ee', F: 'eff', G: 'jee',
 // *** AJUSTADO A "eitch" SEGÚN SOLICITUD ***
 H: 'eitch', I: 'eye', J: 'jay', K: 'kay', L: 'ell', M: 'em', N: 'en',
 O: 'oh', P: 'pee', Q: 'cue', R: 'are', S: 'ess', T: 'tee', U: 'you',
-V: 'vee', W: 'double-u', X: 'ex', Y: 'why', Z: 'zee'
+V: 'vee', W: 'double-u', X: 'ex', Y: 'why', Z: 'Si'
 };
 
 
@@ -125,7 +125,7 @@ window.speechSynthesis.cancel();
 const utterance = new SpeechSynthesisUtterance(pronunciation);
 // *** AJUSTES SOLICITADOS ***
 utterance.lang = 'es-MX';
-utterance.rate = 0.3;
+utterance.rate = 0.6;
 utterance.pitch = 5.0;
 window.speechSynthesis.speak(utterance);
 }
