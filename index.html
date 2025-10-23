@@ -102,11 +102,32 @@ const wordsByGroup = {
 
 // --- English Letter Pronunciations (IMPROVED DICTION) ---
 const letterPronunciations = {
-A: 'ei', B: 'bi', C: 'si', D: 'di', E: 'i', F: 'eff', G: 'yi',
-// *** AJUSTADO A "eitch" SEGÚN SOLICITUD ***
-H: 'eich', I: 'ai', J: 'yei', K: 'kei', L: 'el', M: 'em', N: 'en',
-O: 'ou', P: 'pi', Q: 'quiu', R: 'ar', S: 'es', T: 'ti', U: 'iu',
-V: 'vii', W: 'doble-iu', X: 'ex', Y: 'uai', Z: 'zi'
+  A: 'ei',    // (ay)
+  B: 'bi',    // (bee)
+  C: 'si',    // (see)
+  D: 'di',    // (dee)
+  E: 'i',     // (ee)
+  F: 'ef',    // (eff)
+  G: 'yi',    // (jee)
+  H: 'eich',  // (aitch)
+  I: 'ai',    // (eye)
+  J: 'yei',   // (jay)
+  K: 'kei',   // (kay)
+  L: 'el',    // (ell)
+  M: 'em',    // (emm)
+  N: 'en',    // (enn)
+  O: 'ou',    // (oh)
+  P: 'pi',    // (pee)
+  Q: 'kiu',   // (cue) - CORREGIDO
+  R: 'ar',    // (ar)
+  S: 'es',    // (ess)
+  T: 'ti',    // (tee)
+  U: 'iu',    // (you)
+  V: 'vi',    // (vee) - CORREGIDO
+  W: 'dáboliu', // (double-u) - CORREGIDO
+  X: 'ex',    // (ex)
+  Y: 'uái',   // (wye) - CORREGIDO (fonética más clara)
+  Z: 'zi'     // (zee) - Correcto para en-US
 };
 
 
@@ -124,7 +145,7 @@ if (!pronunciation || !window.speechSynthesis) return;
 window.speechSynthesis.cancel();
 const utterance = new SpeechSynthesisUtterance(pronunciation);
 // *** AJUSTES SOLICITADOS ***
-utterance.lang = 'es-MX';
+utterance.lang = 'en-US';
 utterance.rate = 0.6;
 utterance.pitch = 5.0;
 window.speechSynthesis.speak(utterance);
