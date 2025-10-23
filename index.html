@@ -1,333 +1,269 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spelling Bee Learner</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spelling Bee Learner</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 
-    <!-- Cache Control Headers -->
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    
-    <!-- Tailwind CSS for rapid styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts: Nunito for a friendly look -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+/* Custom styles */
+body {
+font-family: 'Nunito', sans-serif;
+background-color: #f0f9ff; /* Light blue background */
+}
 
-    <style>
-        /* Custom styles */
-        body {
-            font-family: 'Nunito', sans-serif;
-            background-color: #f0f9ff; /* Light blue background */
-        }
+/* Custom animation for the letter press */
+@keyframes pop {
+0%, 100% {
+transform: scale(1);
+}
+50% {
+transform: scale(1.15);
+}
+}
 
-        /* Custom animation for the letter press */
-        @keyframes pop {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.15);
-            }
-        }
+.letter-pop {
+animation: pop 0.3s ease-out;
+}
+/* Custom active state for group buttons */
+.group-button.active {
+background-color: #fbbf24; /* Amber-400 */
+color: #1e3a8a; /* Blue-900 */
+transform: scale(1.05);
+box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
 
-        .letter-pop {
-            animation: pop 0.3s ease-out;
-        }
-        
-        /* Custom active state for group buttons */
-        .group-button.active {
-            background-color: #fbbf24; /* Amber-400 */
-            color: #1e3a8a; /* Blue-900 */
-            transform: scale(1.05);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        }
-
-    </style>
+</style>
 </head>
 <body class="text-slate-800">
 
-    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-5xl">
-        
-        <!-- Header -->
-        <header class="text-center mb-8">
-            <h1 class="text-4xl sm:text-5xl font-black text-blue-800">Spelling Bee Learner</h1>
-            <p class="text-lg text-blue-600 mt-2">¡Presiona cada letra para aprender a deletrear!</p>
-        </header>
+<div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-5xl">
+<header class="text-center mb-8">
+<h1 class="text-4xl sm:text-5xl font-black text-blue-800">Spelling Bee Learner</h1>
+<p class="text-lg text-blue-600 mt-2">¡Presiona cada letra para aprender a deletrear!</p>
+</header>
 
-        <!-- Group Selector -->
-        <nav id="group-selector" class="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8">
-            <!-- Group buttons will be inserted here by JavaScript -->
-        </nav>
+<nav id="group-selector" class="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8">
+</nav>
 
-        <!-- Main content area for word cards -->
-        <main id="word-container" class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-            <!-- Word cards will be inserted here by JavaScript -->
-        </main>
+<main id="word-container" class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+</main>
 
-    </div>
+</div>
 
-    <script>
-        // --- DATA: Words, Groups, and Images ---
-        // *** NOTE: Fixed broken image URLs (removed markdown and 'httpss') ***
-        const groupNames = {
-            1: 'Grupo 1',
-            2: 'Grupo 2',
-            3: 'Grupo 3',
-            4: 'Grupo 4',
-            5: 'Grupo 5',
-            6: 'Repaso'
-        };
+<script>
+// --- DATA: Words, Groups, and Images ---
+const groupNames = {
+1: 'Grupo 1',
+2: 'Grupo 2',
+3: 'Grupo 3',
+4: 'Grupo 4',
+5: 'Grupo 5',
+6: 'Repaso'
+};
 
-        const wordsByGroup = {
-            1: [
-                { word: 'zoo', image: 'https://placehold.co/400x300/a7f3d0/34d399?text=Zoo' },
-                { word: 'yoyo', image: 'https://placehold.co/400x300/fecaca/f87171?text=Yoyo' },
-                { word: 'hen', image: 'https://placehold.co/400x300/fed7aa/fb923c?text=Hen' },
-                { word: 'five', image: 'https://placehold.co/400x300/bfdbfe/60a5fa?text=Five' }
-            ],
-            2: [
-                { word: 'eight', image: 'https://placehold.co/400x300/c7d2fe/818cf8?text=Eight' },
-                { word: 'hair', image: 'https://placehold.co/400x300/ddd6fe/a78bfa?text=Hair' },
-                { word: 'eyes', image: 'https://placehold.co/400x300/fbcfe8/f472b6?text=Eyes' },
-                { word: 'body', image: 'https://placehold.co/400x300/d9f99d/84cc16?text=Body' }
-            ],
-            3: [
-                { word: 'duck', image: 'https://placehold.co/400x300/fef08a/facc15?text=Duck' },
-                { word: 'purple', image: 'https://placehold.co/400x300/e9d5ff/c084fc?text=Purple' },
-                { word: 'father', image: 'https://placehold.co/400x300/bbf7d0/4ade80?text=Father' },
-                { word: 'wing', image: 'https://placehold.co/400x300/a5f3fc/22d3ee?text=Wing' }
-            ],
-            4: [
-                { word: 'violin', image: 'https://placehold.co/400x300/fecdd3/fb7185?text=Violin' },
-                { word: 'square', image: 'https://placehold.co/400x300/bae6fd/38bdf8?text=Square' },
-                { word: 'rabbit', image: 'https://placehold.co/400x300/e5e7eb/6b7280?text=Rabbit' },
-                { word: 'weather', image: 'https://placehold.co/400x300/a5f3fc/22d3ee?text=Weather' }
-            ],
-            5: [
-                { word: 'vegetables', image: 'https://placehold.co/400x300/dcfce7/4ade80?text=Vegetables' },
-                { word: 'animals', image: 'https://placehold.co/400x300/fee2e2/f87171?text=Animals' },
-                { word: 'watermelon', image: 'https://placehold.co/400x300/fecaca/ef4444?text=Watermelon' },
-                { word: 'healthy', image: 'https://placehold.co/400x300/bbf7d0/22c55e?text=Healthy' }
-            ],
-            6: [] // Special case for Repaso group, handled in displayGroup
-        };
+const wordsByGroup = {
+1: [
+{ word: 'zoo', image: 'https://placehold.co/400x300/a7f3d0/34d399?text=Zoo' },
+{ word: 'yoyo', image: 'https://placehold.co/400x300/fecaca/f87171?text=Yoyo' },
+{ word: 'hen', image: 'https://placehold.co/400x300/fed7aa/fb923c?text=Hen' },
+{ word: 'five', image: 'https://placehold.co/400x300/bfdbfe/60a5fa?text=Five' }
+],
+2: [
+{ word: 'eight', image: 'https://placehold.co/400x300/c7d2fe/818cf8?text=Eight' },
+{ word: 'hair', image: 'https://placehold.co/400x300/ddd6fe/a78bfa?text=Hair' },
+{ word: 'eyes', image: 'https://placehold.co/400x300/fbcfe8/f472b6?text=Eyes' },
+{ word: 'body', image: 'https://placehold.co/400x300/d9f99d/84cc16?text=Body' }
+],
+3: [
+{ word: 'duck', image: 'https://placehold.co/400x300/fef08a/facc15?text=Duck' },
+{ word: 'purple', image: 'https://placehold.co/400x300/e9d5ff/c084fc?text=Purple' },
+{ word: 'father', image: 'https://placehold.co/400x300/bbf7d0/4ade80?text=Father' },
+{ word: 'wing', image: 'https://placehold.co/400x300/a5f3fc/22d3ee?text=Wing' }
+],
+4: [
+{ word: 'violin', image: 'https://placehold.co/400x300/fecdd3/fb7185?text=Violin' },
+{ word: 'square', image: 'https://placehold.co/400x300/bae6fd/38bdf8?text=Square' },
+{ word: 'rabbit', image: 'https://placehold.co/400x300/e5e7eb/6b7280?text=Rabbit' },
+{ word: 'weather', image: 'https://placehold.co/400x300/a5f3fc/22d3ee?text=Weather' }
+],
+5: [
+{ word: 'vegetables', image: 'https://placehold.co/400x300/dcfce7/4ade80?text=Vegetables' },
+{ word: 'animals', image: 'https://placehold.co/400x300/fee2e2/f87171?text=Animals' },
+{ word: 'watermelon', image: 'https://placehold.co/400x300/fecaca/ef4444?text=Watermelon' },
+{ word: 'healthy', image: 'https://placehold.co/400x300/bbf7d0/22c55e?text=Healthy' }
+],
+6: [] // Special case for Repaso group, handled in displayGroup
+};
 
-        // --- Standardized Audio URLs (NEW SOURCE: Wikimedia Commons) ---
-        // Using high-quality, public domain .ogg files.
-        const letterAudioUrls = {
-            A: 'https://upload.wikimedia.org/wikipedia/commons/c/c4/En-us-a.ogg',
-            B: 'https://upload.wikimedia.org/wikipedia/commons/d/d0/En-us-b.ogg',
-            C: 'https://upload.wikimedia.org/wikipedia/commons/5/52/En-us-c.ogg',
-            D: 'https://upload.wikimedia.org/wikipedia/commons/8/82/En-us-d.ogg',
-            E: 'https://upload.wikimedia.org/wikipedia/commons/6/62/En-us-e.ogg',
-            F: 'https://upload.wikimedia.org/wikipedia/commons/7/7d/En-us-f.ogg',
-            G: 'https://upload.wikimedia.org/wikipedia/commons/b/ba/En-us-g.ogg',
-            H: 'https://upload.wikimedia.org/wikipedia/commons/8/80/En-us-h.ogg',
-            I: 'https://upload.wikimedia.org/wikipedia/commons/e/e4/En-us-i.ogg',
-            J: 'https://upload.wikimedia.org/wikipedia/commons/3/3a/En-us-j.ogg',
-            K: 'https://upload.wikimedia.org/wikipedia/commons/7/7a/En-us-k.ogg',
-            L: 'https://upload.wikimedia.org/wikipedia/commons/d/dc/En-us-l.ogg',
-            M: 'https://upload.wikimedia.org/wikipedia/commons/a/aa/En-us-m.ogg',
-            N: 'https://upload.wikimedia.org/wikipedia/commons/1/13/En-us-n.ogg',
-            O: 'https://upload.wikimedia.org/wikipedia/commons/8/87/En-us-o.ogg',
-            P: 'https://upload.wikimedia.org/wikipedia/commons/e/e8/En-us-p.ogg',
-            Q: 'https://upload.wikimedia.org/wikipedia/commons/c/ce/En-us-q.ogg',
-            R: 'https://upload.wikimedia.org/wikipedia/commons/e/e1/En-us-r.ogg',
-S: 'https://upload.wikimedia.org/wikipedia/commons/d/d7/En-us-s.ogg',
-            T: 'https://upload.wikimedia.org/wikipedia/commons/b/b1/En-us-t.ogg',
-            U: 'https://upload.wikimedia.org/wikipedia/commons/1/17/En-us-u.ogg',
-            V: 'https://upload.wikimedia.org/wikipedia/commons/8/8f/En-us-v.ogg',
-            W: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/En-us-w.ogg',
-            X: 'https://upload.wikimedia.org/wikipedia/commons/8/82/En-us-x.ogg',
-            Y: 'https://upload.wikimedia.org/wikipedia/commons/e/e3/En-us-y.ogg',
-            Z: 'https://upload.wikimedia.org/wikipedia/commons/7/71/En-us-z.ogg'
-        };
-
-        // Cache for audio objects to prevent re-downloading
-        const audioCache = {};
-        
-
-        // --- CORE FUNCTIONS ---
-        
-        /**
-         * Plays a standardized, high-quality audio file for the letter.
-         * @param {string} letter The letter to speak (e.g., 'A').
-         */
-        function speakLetter(letter) {
-            const upperLetter = letter.toUpperCase();
-            const audioUrl = letterAudioUrls[upperLetter];
-            if (!audioUrl) return;
-
-            let audio;
-            // Check if we've played this sound before
-            if (audioCache[upperLetter]) {
-                audio = audioCache[upperLetter];
-            } else {
-                // First time playing: create, store in cache
-                audio = new Audio(audioUrl);
-                audioCache[upperLetter] = audio;
-            }
-            
-            audio.currentTime = 0; // Rewind
-            audio.playbackRate = 0.8; // Set speed to 80% (slower)
-            // Added error catching for playback issues
-            audio.play().catch(e => console.error("Error al reproducir audio:", e));
-        }
-
-        /**
-         * Creates and displays the word cards for a specific group.
-         * @param {string|number} groupNumber The group number to display.
-         */
-        function displayGroup(groupNumber) {
-            const wordContainer = document.getElementById('word-container');
-            wordContainer.innerHTML = ''; // Clear previous words
-
-            // --- SPECIAL CASE FOR GROUP 6: REPASO ---
-            if (groupNumber == 6) {
-                const reviewLetters = ['H', 'G', 'R', 'D', 'L', 'M', 'N', 'Y', 'V', 'B', 'W', 'J'];
-                
-                // Create one single card for the review
-                const card = document.createElement('div');
-                card.className = 'bg-white rounded-2xl shadow-lg p-4 sm:p-6 text-center md:col-span-2'; // Span 2 cols
-
-                // Add a title for the card
-                const title = document.createElement('h2');
-                title.className = 'text-2xl sm:text-3xl font-bold text-blue-700 mb-6';
-                title.textContent = 'Letras de Repaso';
-                card.appendChild(title);
-
-                // Create the container for the letters
-                const lettersContainer = document.createElement('div');
-                lettersContainer.className = 'flex justify-center gap-3 sm:gap-4 flex-wrap'; // Increase gap
-
-                // Create a button for each review letter
-                reviewLetters.forEach(letter => {
-                    const letterButton = document.createElement('div');
-                    // Bigger buttons for review
-                    letterButton.className = 'letter-button w-16 h-24 sm:w-20 sm:h-28 flex flex-col items-center justify-center bg-blue-100 text-blue-800 rounded-lg cursor-pointer transition-all duration-200 hover:bg-blue-200 hover:shadow-md p-1';
-                    
-                    letterButton.innerHTML = `
-                        <span class="font-black text-3xl sm:text-4xl leading-none">${letter.toUpperCase()}</span>
-                        <span class="font-bold text-2xl sm:text-3xl leading-none text-blue-600">${letter.toLowerCase()}</span>
-                    `;
-                    
-                    letterButton.addEventListener('click', () => {
-                        speakLetter(letter);
-                        letterButton.classList.add('letter-pop');
-                        letterButton.addEventListener('animationend', () => {
-                            letterButton.classList.remove('letter-pop');
-                        }, { once: true });
-                    });
-                    
-                    lettersContainer.appendChild(letterButton);
-                });
-
-                card.appendChild(lettersContainer);
-                wordContainer.appendChild(card);
-                
-                updateActiveGroupButton(groupNumber);
-                return; // Stop execution here
-            }
-            
-            // --- EXISTING LOGIC FOR WORD GROUPS (1-5) ---
-            const words = wordsByGroup[groupNumber];
-
-            if (!words) {
-                wordContainer.innerHTML = '<p>Grupo no encontrado.</p>';
-                return;
-            }
-
-            words.forEach(wordData => {
-                const card = document.createElement('div');
-                card.className = 'bg-white rounded-2xl shadow-lg p-4 sm:p-6 text-center transform transition-transform duration-300 hover:scale-105';
-
-                const img = document.createElement('img');
-                img.src = wordData.image;
-                img.alt = `Ilustración de ${wordData.word}`;
-                img.className = 'w-full h-48 object-cover rounded-xl mb-4';
-                
-                img.onerror = () => { img.src = `https://placehold.co/400x300/e0e0e0/9090e0?text=Error`; }
-
-                const lettersContainer = document.createElement('div');
-                lettersContainer.className = 'flex justify-center gap-2 sm:gap-3 flex-wrap';
-
-                wordData.word.split('').forEach(letter => {
-                    const letterButton = document.createElement('div');
-                    letterButton.className = 'letter-button w-12 h-16 sm:w-14 sm:h-20 flex flex-col items-center justify-center bg-blue-100 text-blue-800 rounded-lg cursor-pointer transition-all duration-200 hover:bg-blue-200 hover:shadow-md p-1';
-                    
-                    letterButton.innerHTML = `
-                        <span class="font-black text-2xl sm:text-3xl leading-none">${letter.toUpperCase()}</span>
-                        <span class="font-bold text-xl sm:text-2xl leading-none text-blue-600">${letter.toLowerCase()}</span>
-                    `;
-                    
-                    letterButton.addEventListener('click', () => {
-                        speakLetter(letter);
-                        letterButton.classList.add('letter-pop');
-                        letterButton.addEventListener('animationend', () => {
-                            letterButton.classList.remove('letter-pop');
-                        }, { once: true });
-                    });
-                    
-                    lettersContainer.appendChild(letterButton);
-                });
-
-                card.appendChild(img);
-                card.appendChild(lettersContainer);
-                wordContainer.appendChild(card);
-            });
-            
-            updateActiveGroupButton(groupNumber);
-        }
-
-        /**
-         * Updates the visual style of the active group button.
-         * @param {string|number} activeGroupNumber The currently selected group.
-         */
-        function updateActiveGroupButton(activeGroupNumber) {
-            const allButtons = document.querySelectorAll('.group-button');
-            allButtons.forEach(button => {
-                if (button.dataset.group == activeGroupNumber) {
-                    button.classList.add('active');
-                } else {
-                    button.classList.remove('active');
-                }
-            });
-        }
-        
-        /**
-         * Creates the group selector buttons.
-         */
-        function createGroupButtons() {
-            const selectorContainer = document.getElementById('group-selector');
-            const groupKeys = Object.keys(groupNames); // Use groupNames to get all keys
-
-            groupKeys.forEach(key => {
-                const button = document.createElement('button');
-                button.className = 'group-button px-5 py-3 sm:px-6 sm:py-3 bg-white text-blue-700 font-bold rounded-full shadow-md transition-all duration-300 hover:bg-yellow-200';
-                button.textContent = groupNames[key]; // Use the name from groupNames
-                button.dataset.group = key;
-                
-                button.addEventListener('click', () => {
-                    displayGroup(key);
-                });
-                
-                selectorContainer.appendChild(button);
-            });
-        }
+// --- English Letter Pronunciations (IMPROVED DICTION) ---
+const letterPronunciations = {
+A: 'eigh', B: 'bee', C: 'see', D: 'dee', E: 'ee', F: 'eff', G: 'jee',
+// *** AJUSTADO A "eitch" SEGÚN SOLICITUD ***
+H: 'eitch', I: 'eye', J: 'jay', K: 'kay', L: 'ell', M: 'em', N: 'en',
+O: 'oh', P: 'pee', Q: 'cue', R: 'are', S: 'ess', T: 'tee', U: 'you',
+V: 'vee', W: 'double-u', X: 'ex', Y: 'why', Z: 'zee'
+};
 
 
-        // --- INITIALIZATION ---
-        document.addEventListener('DOMContentLoaded', () => {
-            createGroupButtons();
-            displayGroup(1); // Display the first group by default
-        });
+// --- CORE FUNCTIONS ---
 
-    </script>
+/**
+* Uses the browser's Speech Synthesis API to say a letter's name.
+* @param {string} letter The letter to speak (e.g., 'A').
+*/
+function speakLetter(letter) {
+const upperLetter = letter.toUpperCase();
+const pronunciation = letterPronunciations[upperLetter];
+if (!pronunciation || !window.speechSynthesis) return;
+
+window.speechSynthesis.cancel();
+const utterance = new SpeechSynthesisUtterance(pronunciation);
+// *** AJUSTES SOLICITADOS ***
+utterance.lang = 'es-MX';
+utterance.rate = 0.3;
+utterance.pitch = 5.0;
+window.speechSynthesis.speak(utterance);
+}
+
+/**
+* Creates and displays the word cards for a specific group.
+* @param {string|number} groupNumber The group number to display.
+*/
+function displayGroup(groupNumber) {
+const wordContainer = document.getElementById('word-container');
+wordContainer.innerHTML = ''; // Clear previous words
+
+// --- SPECIAL CASE FOR GROUP 6: REPASO ---
+if (groupNumber == 6) {
+const reviewLetters = ['H', 'G', 'R', 'D', 'L'];
+// Create one single card for the review
+const card = document.createElement('div');
+card.className = 'bg-white rounded-2xl shadow-lg p-4 sm:p-6 text-center md:col-span-2'; // Span 2 cols
+
+// Add a title for the card
+const title = document.createElement('h2');
+title.className = 'text-2xl sm:text-3xl font-bold text-blue-700 mb-6';
+title.textContent = 'Letras de Repaso';
+card.appendChild(title);
+
+// Create the container for the letters
+const lettersContainer = document.createElement('div');
+lettersContainer.className = 'flex justify-center gap-3 sm:gap-4 flex-wrap'; // Increase gap
+
+// Create a button for each review letter
+reviewLetters.forEach(letter => {
+const letterButton = document.createElement('div');
+// Bigger buttons for review
+letterButton.className = 'letter-button w-16 h-24 sm:w-20 sm:h-28 flex flex-col items-center justify-center bg-blue-100 text-blue-800 rounded-lg cursor-pointer transition-all duration-200 hover:bg-blue-200 hover:shadow-md p-1';
+letterButton.innerHTML = `
+<span class="font-black text-3xl sm:text-4xl leading-none">${letter.toUpperCase()}</span>
+<span class="font-bold text-2xl sm:text-3xl leading-none text-blue-600">${letter.toLowerCase()}</span>
+`;
+letterButton.addEventListener('click', () => {
+speakLetter(letter);
+letterButton.classList.add('letter-pop');
+letterButton.addEventListener('animationend', () => {
+letterButton.classList.remove('letter-pop');
+}, { once: true });
+});
+lettersContainer.appendChild(letterButton);
+});
+
+card.appendChild(lettersContainer);
+wordContainer.appendChild(card);
+updateActiveGroupButton(groupNumber);
+return; // Stop execution here
+}
+// --- EXISTING LOGIC FOR WORD GROUPS (1-5) ---
+const words = wordsByGroup[groupNumber];
+
+if (!words) {
+wordContainer.innerHTML = '<p>Grupo no encontrado.</p>';
+return;
+}
+
+words.forEach(wordData => {
+const card = document.createElement('div');
+card.className = 'bg-white rounded-2xl shadow-lg p-4 sm:p-6 text-center transform transition-transform duration-300 hover:scale-105';
+
+const img = document.createElement('img');
+img.src = wordData.image;
+img.alt = `Ilustración de ${wordData.word}`;
+img.className = 'w-full h-48 object-cover rounded-xl mb-4';
+img.onerror = () => { img.src = `https://placehold.co/400x300/e0e0e0/909090?text=Error`; }
+
+const lettersContainer = document.createElement('div');
+lettersContainer.className = 'flex justify-center gap-2 sm:gap-3 flex-wrap';
+
+wordData.word.split('').forEach(letter => {
+const letterButton = document.createElement('div');
+letterButton.className = 'letter-button w-12 h-16 sm:w-14 sm:h-20 flex flex-col items-center justify-center bg-blue-100 text-blue-800 rounded-lg cursor-pointer transition-all duration-200 hover:bg-blue-200 hover:shadow-md p-1';
+letterButton.innerHTML = `
+<span class="font-black text-2xl sm:text-3xl leading-none">${letter.toUpperCase()}</span>
+<span class="font-bold text-xl sm:text-2xl leading-none text-blue-600">${letter.toLowerCase()}</span>
+`;
+letterButton.addEventListener('click', () => {
+speakLetter(letter);
+letterButton.classList.add('letter-pop');
+letterButton.addEventListener('animationend', () => {
+letterButton.classList.remove('letter-pop');
+}, { once: true });
+});
+lettersContainer.appendChild(letterButton);
+});
+
+card.appendChild(img);
+card.appendChild(lettersContainer);
+wordContainer.appendChild(card);
+});
+updateActiveGroupButton(groupNumber);
+}
+
+/**
+* Updates the visual style of the active group button.
+* @param {string|number} activeGroupNumber The currently selected group.
+*/
+function updateActiveGroupButton(activeGroupNumber) {
+const allButtons = document.querySelectorAll('.group-button');
+allButtons.forEach(button => {
+if (button.dataset.group == activeGroupNumber) {
+button.classList.add('active');
+} else {
+button.classList.remove('active');
+}
+});
+}
+/**
+* Creates the group selector buttons.
+*/
+function createGroupButtons() {
+const selectorContainer = document.getElementById('group-selector');
+const groupKeys = Object.keys(groupNames); // Use groupNames to get all keys
+
+groupKeys.forEach(key => {
+const button = document.createElement('button');
+button.className = 'group-button px-5 py-3 sm:px-6 sm:py-3 bg-white text-blue-700 font-bold rounded-full shadow-md transition-all duration-300 hover:bg-yellow-200';
+button.textContent = groupNames[key]; // Use the name from groupNames
+button.dataset.group = key;
+button.addEventListener('click', () => {
+displayGroup(key);
+});
+selectorContainer.appendChild(button);
+});
+}
+
+
+// --- INITIALIZATION ---
+document.addEventListener('DOMContentLoaded', () => {
+createGroupButtons();
+displayGroup(1); // Display the first group by default
+});
+
+</script>
 </body>
 </html>
-
